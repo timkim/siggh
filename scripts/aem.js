@@ -704,6 +704,22 @@ async function loadSections(element) {
   }
 }
 
+/**
+ * Creates a tag with the given name and attributes.
+ * @param {string} name The tag name
+ * @param {object} attrs An object containing the attributes
+ * @returns The new tag
+ */
+function createTag(name, attrs) {
+  const el = document.createElement(name);
+  if (typeof attrs === 'object') {
+    Object.entries(attrs).forEach(([key, value]) => {
+      el.setAttribute(key, value);
+    });
+  }
+  return el;
+}
+
 init();
 
 export {
@@ -715,6 +731,7 @@ export {
   decorateIcons,
   decorateSections,
   decorateTemplateAndTheme,
+  createTag,
   fetchPlaceholders,
   getMetadata,
   loadBlock,
