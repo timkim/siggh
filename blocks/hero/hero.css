@@ -4,9 +4,10 @@
 
 .hero {
   position: relative;
-  min-height: 300px;
+  min-height: 600px;
   display: grid;
   grid-template-columns: 1fr;
+
 }
 
 .hero h1 {
@@ -34,11 +35,21 @@
 @media (width >= 900px) {
   .hero {
     grid-template-columns: 351px 1fr;
+    align-items: center;
   }
 
   .hero h1 {
     padding-left: 64px;
   }
+
+  .hero div:nth-child(2) {
+    height: 227px;
+  }
+}
+
+.hero div:nth-child(2) {
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
 
 .hero .red-block {
@@ -46,3 +57,4 @@
   width: 351px;
   height: 227px;
 }
+
