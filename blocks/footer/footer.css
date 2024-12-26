@@ -1,5 +1,6 @@
 footer {
-  background-color: var(--light-color);
+  background-color: #020D26;
+  color: #ffffff;
   font-size: var(--body-font-size-xs);
 }
 
@@ -9,8 +10,28 @@ footer .footer > div {
   padding: 40px 24px 24px;
 }
 
+footer .footer h2 {
+  font-size: 64px;
+  line-height: 75px;
+  font-weight: 800;
+  margin-bottom: 40px;
+
+}
 footer .footer p {
-  margin: 0;
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 28.13px;
+}
+
+footer .footer .icon {
+  width: 40px;
+  height: 40px;
+  padding-right: 40px;
+}
+
+footer .footer p:last-child {
+
 }
 
 @media (width >= 900px) {
