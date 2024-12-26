@@ -45,6 +45,12 @@
   .hero div:nth-child(2) {
     height: 227px;
   }
+
+  .hero .red-block {
+    background-color: #b20a08;
+    width: 351px;
+    height: 227px;
+  }
 }
 
 .hero div:nth-child(2) {
@@ -52,9 +58,5 @@
   padding-bottom: 64px;
 }
 
-.hero .red-block {
-  background-color: #b20a08;
-  width: 351px;
-  height: 227px;
-}
+
 
