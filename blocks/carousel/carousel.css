@@ -40,6 +40,9 @@
   align-items: flex-end;
 }
 
+.carousel .carousel-slide .carousel-slide-image {
+    width: 600px;
+}
 .carousel .carousel-slide .carousel-slide-image picture {
   position: absolute;
   inset: 0;
