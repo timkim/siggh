@@ -183,6 +183,7 @@ header nav .nav-sections ul > li > ul > li {
 
 @media (width >= 900px) {
   header nav .nav-sections {
+    justify-content: right;
     display: block;
     visibility: visible;
     white-space: nowrap;
