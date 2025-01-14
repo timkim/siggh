@@ -30,12 +30,20 @@ footer .footer .icon {
   padding-right: 40px;
 }
 
-footer .footer p:last-child {
-
+footer .footer > div > div .default-content-wrapper {
+  position: relative;
 }
+
+
 
 @media (width >= 900px) {
   footer .footer > div {
     padding: 40px 32px 24px;
+  }
+
+  footer .footer p:last-child {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }
