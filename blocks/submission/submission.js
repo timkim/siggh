@@ -6,6 +6,7 @@ export default function decorate(block) {
   //block.prepend(redBlockDiv);
   const links = [...block.querySelectorAll('a')].map((a) => a.href);
   const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
+  const thankyouLink = links.find((link) => link.startsWith('https://script.google.com'));
 
   const submissionFormHTML = `
     <form 
@@ -17,4 +18,20 @@ export default function decorate(block) {
     </form>`;
 
     block.innerHTML = submissionFormHTML;
+
+    const form = block.querySelector('form');
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = new FormData(form);
+      const action = e.target.action;
+      fetch(action, {
+        method: 'POST',
+        body: data,
+      })
+      .then(() => {
+        
+      })
+    });
+
+
 }
