@@ -10,7 +10,7 @@ export default function decorate(block) {
   const submissionFormHTML = `
     <form 
       method="POST" 
-      action="${submitLink}}"
+      action="${submitLink}"
     >
       <input name="Email" type="email" placeholder="Email" required>
       <button type="submit">Send</button>
