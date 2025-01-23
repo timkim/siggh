@@ -6,7 +6,8 @@ async function createForm(formHref, submitHref) {
   const json = await resp.json();
 
   const form = document.createElement('form');
-  form.dataset.action = submitHref;
+  form.method = "POST";
+  form.action = submitHref;
 
   const fields = await Promise.all(json.data.map((fd) => createField(fd, form)));
   fields.forEach((field) => {
@@ -43,7 +44,7 @@ function generatePayload(form) {
   return payload;
 }
 
-async function handleSubmit(form) {
+async function handleSubmit(form, submitObj) {
   if (form.getAttribute('data-submitting') === 'true') return;
 
   const submit = form.querySelector('button[type="submit"]');
@@ -53,14 +54,14 @@ async function handleSubmit(form) {
 
     // create payload
     const payload = generatePayload(form);
-    const response = await fetch(form.dataset.action, {
+    const data = new FormData(form);
+    const response = await fetch(submitObj.target.action, {
       method: 'POST',
-      body: JSON.stringify({ data: payload }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: data,
     });
     if (response.ok) {
+      console.log('form submit ok');
+      console.log(form)
       if (form.dataset.confirmation) {
         window.location.href = form.dataset.confirmation;
       }
@@ -77,14 +78,27 @@ async function handleSubmit(form) {
   }
 }
 
+function findAttribute(obj, attribute) {
+  for (const key in obj) {
+    if (key === attribute) {
+      return obj[key];
+    } else if (typeof obj[key] === "object") {
+      const result = findAttribute(obj[key], attribute);
+      if (result) {
+        return result;
+      }
+    }
+  }
+  return null;
+}
+
 export default async function decorate(block) {
   const links = [...block.querySelectorAll('a')].map((a) => a.href);
   const formLink = links.find((link) => link.startsWith(window.location.origin) && link.endsWith('.json'));
   const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
-  console.log(`submitLink: ${submitLink}`);
   
   if (!formLink || !submitLink) return;
-
+  console.log(formLink)
   const form = await createForm(formLink, submitLink);
   block.replaceChildren(form);
 
@@ -92,7 +106,7 @@ export default async function decorate(block) {
     e.preventDefault();
     const valid = form.checkValidity();
     if (valid) {
-      handleSubmit(form);
+      handleSubmit(form, e);
     } else {
       const firstInvalidEl = form.querySelector(':invalid:not(fieldset)');
       if (firstInvalidEl) {

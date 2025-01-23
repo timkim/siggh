@@ -1,6 +1,7 @@
 import { toClassName } from '../../scripts/aem.js';
 
 function createFieldWrapper(fd) {
+  console.log(fd)
   const fieldWrapper = document.createElement('div');
   if (fd.Style) fieldWrapper.className = fd.Style;
   fieldWrapper.classList.add('field-wrapper', `${fd.Type}-wrapper`);
@@ -35,7 +36,7 @@ function setCommonAttributes(field, fd) {
   field.name = fd.Name;
   field.required = fd.Mandatory && (fd.Mandatory.toLowerCase() === 'true' || fd.Mandatory.toLowerCase() === 'x');
   field.placeholder = fd.Placeholder;
-  field.value = fd.Value;
+  field.value = fd.Value || '';
 }
 
 const createHeading = (fd) => {
@@ -112,7 +113,7 @@ const createSelect = async (fd) => {
 };
 
 const createConfirmation = (fd, form) => {
-  form.dataset.confirmation = new URL(fd.Value).pathname;
+  form.dataset.confirmation = new URL(fd.Value, 'https://' + window.location.host);
 
   return {};
 };
@@ -122,6 +123,7 @@ const createSubmit = (fd) => {
   button.textContent = fd.Label || fd.Name;
   button.classList.add('button');
   button.type = 'submit';
+
 
   const fieldWrapper = createFieldWrapper(fd);
   fieldWrapper.append(button);
@@ -231,6 +233,5 @@ export default async function createField(fd, form) {
   const type = fd.Type.toLowerCase();
   const createFieldFunc = FIELD_CREATOR_FUNCTIONS[type] || createInput;
   const fieldElements = await createFieldFunc(fd, form);
-
   return fieldElements.fieldWrapper;
 }

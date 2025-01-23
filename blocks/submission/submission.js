@@ -24,12 +24,14 @@ export default function decorate(block) {
       e.preventDefault();
       const data = new FormData(form);
       const action = e.target.action;
+      console.log(action)
+      console.log(data)
       fetch(action, {
         method: 'POST',
         body: data,
       })
       .then(() => {
-        
+        console.log('Success')
       })
     });
 
