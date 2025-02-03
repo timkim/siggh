@@ -51,7 +51,9 @@ function inquiryForm(scriptUrl, heading, description) {
 
       <div>
         <label for="inquiryProductDescription">Product Description</label>
-        <input id="inquiryProductDescription" name="productDescription" type="text" >    
+        <textarea id="inquiryProductDescription" name="productDescription">  
+
+        </textarea>
       </div>
 
       <div>
