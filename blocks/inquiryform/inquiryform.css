@@ -37,9 +37,7 @@
 }
 
 .inquiryform > div > div:nth-child(1) .inquiryContactsGroup {
-  display: flex;
-  align-items: center;
-  
+  display: flex;  
 }
 
 .inquiryform > div > div:nth-child(1) .inquiryContactsWrapper {
