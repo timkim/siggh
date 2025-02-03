@@ -93,9 +93,12 @@ function findAttribute(obj, attribute) {
   return null;
 }
 
-function inquiryForm(scriptURL) {
+function inquiryForm(heading, description) {
   const div = createTag('div', { class: 'inquiryForm'});
   div.innerHTML = `
+  <h1>${heading}</h1>
+  <p>${description}</p>
+
   <form name="inquiry">
     <div>
       <label for="inquiryName">Name</label>
@@ -126,17 +129,17 @@ function inquiryForm(scriptURL) {
     <div>
       <label for="inquirySpecs">Do you have completed Drawings/Specs?</label>
       <div id="inquirySpecs">
-          <input id="inquirySpecsYes" name="inquirySpecsYes" type="radio" value="yes" > 
+          <input id="inquirySpecsYes" name="completeSpec" type="radio" value="yes" > 
           <label for="inquirySpecsYes">Yes</label>
 
-          <input id="inquirySpecsNo" name="inquirySpecsNo" type="radio" value="no" > 
+          <input id="inquirySpecsNo" name="completeSpec" type="radio" value="no" > 
           <label for="inquirySpecsNo">No</label>
       </div>
     </div>
 
     <div>
       <label for="inquiryEstimatedAnnual">Estimated Annual Quantity</label>
-      <input id="inquiryEstimatedAnnual" name="estimatedAnnlyal" type="text" >
+      <input id="inquiryEstimatedAnnual" name="estimatedAnnualQuantity" type="text" >
     </div>
     <button type="submit">Let's Chat</button>
   </form>
@@ -184,24 +187,17 @@ export default async function decorate(block) {
     });
   });
 
-  console.log(cols)
-  console.log(cols[1].innerHTML)
-
   const inquiryformTitle = cols[1].querySelector('h1');
   const inquiryDescription = cols[1].querySelector('p');
+  const links = [...cols[1].querySelectorAll('a')].map((a) => a.href);
+  const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
 
-  cols[1].innerHTML = inquiryForm(1234).innerHTML;
+  cols[1].innerHTML = inquiryForm(inquiryformTitle.innerHTML, inquiryDescription.innerHTML).innerHTML;
   
-  // const links = [...block.querySelectorAll('a')].map((a) => a.href);
-  // const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
-
-  // block.querySelector('div');
-  // block.append(inquiryForm(submitLink));
-
-
-  block.addEventListener('submit', e => {
+  const form = cols[1].querySelector('form');
+  form.addEventListener('submit', e => {
     e.preventDefault()
-    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+    fetch(submitLink, { method: 'POST', body: new FormData(form)})
       .then(response => console.log('Success!', response))
       .catch(error => console.error('Error!', error.message))
   })
