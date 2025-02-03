@@ -5,6 +5,8 @@
 
 .inquiryform img {
   width: 100%;
+  border-radius: 8px;
+  margin-bottom: 40px;
 }
 
 .inquiryform > div > div {
@@ -23,7 +25,73 @@
   margin: 0 auto;
 }
 
+.inquiryform .visible {
+  visibility: visible;
+}
+
+.inquiryform .not-visible {
+  visibility: hidden;
+}
+.inquiryform > div > div:nth-child(2) > form > div {
+  padding-bottom: 10px;
+}
+
+.inquiryform > div > div:nth-child(1) .inquiryContactsGroup {
+  display: flex;
+  align-items: center;
+  
+}
+
+.inquiryform > div > div:nth-child(1) .inquiryContactsWrapper {
+  width: 50%;
+}
+.inquiryform > div > div:nth-child(1) p:has(+ul) {
+
+}
+.inquiryform > div > div:nth-child(1) p+ul {
+
+}
+
+.inquiryform > div > div:nth-child(2) > p {
+  padding-bottom: 30px;
+}
+
+.inquiryform > div > div:nth-child(2) label {
+  display: block;
+}
+
+.inquiryform .inquiry-form-col {
+  display: flex;
+  align-items: center;
+}
+
+.inquiryform .inquiry-form-col > div {
+  width: 50%;
+}
+
+.inquiryform .inquiry-form-col input {
+  width: 90%;
+}
+
+.inquiryform #inquirySpecs label {
+  padding: inherit;
+  display: inline-block;
+}
+
+.inquiryform  #inquiryProductDescription {
+  width: 95%;
+  height: 130px;
+}
+
+.inquiryform  #inquirySpecsYes, #inquirySpecsNo {
+  width: 55px;
+}
+
 @media (width >= 900px) {
+  .inquiryform > div > div:nth-child(2) { 
+    margin-top: 10%;
+  }
+
   .inquiryform > div {
     align-items: center;
     flex-direction: unset;

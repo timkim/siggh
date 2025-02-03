@@ -16,8 +16,8 @@
   --light-color: #f8f8f8;
   --dark-color: #505050;
   --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --link-color: #d74734;
+  --link-hover-color: #952c1f;
 
 
   /* fonts */
@@ -174,7 +174,7 @@ button {
   max-width: 100%;
   margin: 12px 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
+  border-radius: 8px;
   padding: 0.5em 1.2em;
   font-family: var(--body-font-family);
   font-style: normal;

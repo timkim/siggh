@@ -1,111 +1,34 @@
 //import createField from './form-fields.js';
 import { createTag } from '../../scripts/aem.js';
 
-async function createForm(formHref, submitHref) {
-  const { pathname } = new URL(formHref);
-  const resp = await fetch(pathname);
-  const json = await resp.json();
-
-  const form = document.createElement('form');
-  form.method = "POST";
-  form.action = submitHref;
-
-  const fields = await Promise.all(json.data.map((fd) => createField(fd, form)));
-  fields.forEach((field) => {
-    if (field) {
-      form.append(field);
-    }
-  });
-
-  // group fields into fieldsets
-  const fieldsets = form.querySelectorAll('fieldset');
-  fieldsets.forEach((fieldset) => {
-    form.querySelectorAll(`[data-fieldset="${fieldset.name}"`).forEach((field) => {
-      fieldset.append(field);
-    });
-  });
-
-  return form;
+function inquiryContact(productType, numbers) {
+  const div = createTag('div');
+  div.innerHTML = `
+    <p><strong>${productType}</strong></p>
+    <ul>
+      ${numbers}
+    </ul>
+  `;
+  return div;
 }
 
-function generatePayload(form) {
-  const payload = {};
-
-  [...form.elements].forEach((field) => {
-    if (field.name && field.type !== 'submit' && !field.disabled) {
-      if (field.type === 'radio') {
-        if (field.checked) payload[field.name] = field.value;
-      } else if (field.type === 'checkbox') {
-        if (field.checked) payload[field.name] = payload[field.name] ? `${payload[field.name]},${field.value}` : field.value;
-      } else {
-        payload[field.name] = field.value;
-      }
-    }
-  });
-  return payload;
-}
-
-async function handleSubmit(form, submitObj) {
-  if (form.getAttribute('data-submitting') === 'true') return;
-
-  const submit = form.querySelector('button[type="submit"]');
-  try {
-    form.setAttribute('data-submitting', 'true');
-    submit.disabled = true;
-
-    // create payload
-    const payload = generatePayload(form);
-    const data = new FormData(form);
-    const response = await fetch(submitObj.target.action, {
-      method: 'POST',
-      body: data,
-    });
-    if (response.ok) {
-      console.log('form submit ok');
-      console.log(form)
-      if (form.dataset.confirmation) {
-        window.location.href = form.dataset.confirmation;
-      }
-    } else {
-      const error = await response.text();
-      throw new Error(error);
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  } finally {
-    form.setAttribute('data-submitting', 'false');
-    submit.disabled = false;
-  }
-}
-
-function findAttribute(obj, attribute) {
-  for (const key in obj) {
-    if (key === attribute) {
-      return obj[key];
-    } else if (typeof obj[key] === "object") {
-      const result = findAttribute(obj[key], attribute);
-      if (result) {
-        return result;
-      }
-    }
-  }
-  return null;
-}
-
-function inquiryForm(heading, description) {
+function inquiryForm(scriptUrl, heading, description) {
   const div = createTag('div', { class: 'inquiryForm'});
   div.innerHTML = `
   <h1>${heading}</h1>
   <p>${description}</p>
 
-  <form name="inquiry">
-    <div>
-      <label for="inquiryName">Name</label>
-      <input id="inquiryName" name="name" type="text" required>
+  <form class="inquiry-form" name="inquiry" method="POST" action="${scriptUrl}">
+    <div class="inquiry-form-col">
+      <div>
+        <label for="inquiryName">Name</label>
+        <input id="inquiryName" name="name" type="text" required>
+      </div>
 
-      <label for="inquiryEmail">Email address</label>
-      <input id="inquiryEmail" name="email" type="email" required>
+      <div>
+        <label for="inquiryEmail">Email address</label>
+        <input id="inquiryEmail" name="email" type="email" required>
+      </div>
     </div>
 
     <div>
@@ -113,63 +36,49 @@ function inquiryForm(heading, description) {
       <input id="inquiryGetMore" name="getMorePricing" type="checkbox" >
     </div>
 
-    <div>
-      <label for="inquiryIndustry">Industry</label>
-      <input id="inquiryIndustry" name="industry" type="text" > 
+    <div id="inquiry-more" class="not-visible">
+      <div class="inquiry-form-col">
+        <div>
+          <label for="inquiryIndustry">Industry</label>
+          <input id="inquiryIndustry" name="industry" type="text" > 
+        </div>
 
-      <label for="inquiryCoreMaterial">Core Material</label>
-      <input id="inquiryCoreMaterial" name="coreMaterial" type="text" >
-    </div>
-
-    <div>
-      <label for="inquiryProductDescription">Product Description</label>
-      <input id="inquiryProductDescription" name="productDescription" type="text" >    
-    </div>
-
-    <div>
-      <label for="inquirySpecs">Do you have completed Drawings/Specs?</label>
-      <div id="inquirySpecs">
-          <input id="inquirySpecsYes" name="completeSpec" type="radio" value="yes" > 
-          <label for="inquirySpecsYes">Yes</label>
-
-          <input id="inquirySpecsNo" name="completeSpec" type="radio" value="no" > 
-          <label for="inquirySpecsNo">No</label>
+        <div>
+          <label for="inquiryCoreMaterial">Core Material</label>
+          <input id="inquiryCoreMaterial" name="coreMaterial" type="text" >
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label for="inquiryEstimatedAnnual">Estimated Annual Quantity</label>
-      <input id="inquiryEstimatedAnnual" name="estimatedAnnualQuantity" type="text" >
+      <div>
+        <label for="inquiryProductDescription">Product Description</label>
+        <input id="inquiryProductDescription" name="productDescription" type="text" >    
+      </div>
+
+      <div>
+        <label for="inquirySpecs">Do you have completed Drawings/Specs?</label>
+        <div id="inquirySpecs">
+            <input id="inquirySpecsYes" name="completeSpec" type="radio" value="yes" > 
+            <label for="inquirySpecsYes">Yes</label>
+
+            <input id="inquirySpecsNo" name="completeSpec" type="radio" value="no" > 
+            <label for="inquirySpecsNo">No</label>
+        </div>
+      </div>
+
+      <div class="inquiry-form-col">
+        <div>
+          <label for="inquiryEstimatedAnnual">Estimated Annual Quantity</label>
+          <input id="inquiryEstimatedAnnual" name="estimatedAnnualQuantity" type="number" >
+        </div>
+      </div>
     </div>
     <button type="submit">Let's Chat</button>
   </form>
   `
   return div;
 }
+
 export default async function decorate(block) {
-  // const links = [...block.querySelectorAll('a')].map((a) => a.href);
-  // const formLink = links.find((link) => link.startsWith(window.location.origin) && link.endsWith('.json'));
-
-  
-  // if (!formLink || !submitLink) return;
-  // console.log(formLink)
-  // const form = await createForm(formLink, submitLink);
-  // block.replaceChildren(form);
-
-  // form.addEventListener('submit', (e) => {
-  //   e.preventDefault();
-  //   const valid = form.checkValidity();
-  //   if (valid) {
-  //     handleSubmit(form, e);
-  //   } else {
-  //     const firstInvalidEl = form.querySelector(':invalid:not(fieldset)');
-  //     if (firstInvalidEl) {
-  //       firstInvalidEl.focus();
-  //       firstInvalidEl.scrollIntoView({ behavior: 'smooth' });
-  //     }
-  //   }
-  // });
-
   const cols = [...block.firstElementChild.children];
   block.classList.add(`inquiryform-${cols.length}-cols`);
 
@@ -187,13 +96,65 @@ export default async function decorate(block) {
     });
   });
 
-  const inquiryformTitle = cols[1].querySelector('h1');
-  const inquiryDescription = cols[1].querySelector('p');
+  const inquiryformTitle = cols[1]?.querySelector('h2');
+  const inquiryDescription = cols[1]?.querySelector('p');
+
+  let inquiryContactText = [];
+  cols[0]?.querySelectorAll('p:has(+ul)').forEach( (contact, index) => {
+    let numbers = [];
+
+    contact.parentElement.querySelectorAll(`p+ul`)[index].querySelectorAll('li').forEach( (theNumbers) => {
+      numbers.push(theNumbers.innerText.trim());
+      theNumbers.remove();
+    });
+
+    inquiryContactText.push([contact.innerText.trim(), numbers]);
+    contact.remove();
+  });
+
+  const contactsGroup = createTag('div', { class: 'inquiryContactsGroup'});
+
+  inquiryContactText.forEach( ( contact, index ) => {
+    const contacts = createTag('div', { class: 'inquiryContactsWrapper'});
+
+    let numbers = createTag('ul');
+    contact[1].forEach((number) => {
+      const li = createTag('li');
+      li.innerText = number;
+      numbers.append(li)
+    })
+
+    const contactLeft = inquiryContact(contact[0], numbers.innerHTML);
+
+    const contactRight = createTag('div', { class: 'inquiryContactsRight'});
+
+    contacts.append(contactLeft);
+    contacts.append(contactRight);
+    contactsGroup.append(contacts);
+
+  });
+  
+  cols[0].append(contactsGroup);
+
   const links = [...cols[1].querySelectorAll('a')].map((a) => a.href);
   const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
 
-  cols[1].innerHTML = inquiryForm(inquiryformTitle.innerHTML, inquiryDescription.innerHTML).innerHTML;
+  cols[1].innerHTML = inquiryForm(submitLink, inquiryformTitle.innerHTML, inquiryDescription.innerHTML).innerHTML;
   
+  const getMoreCheckbox = document.querySelector('#inquiryGetMore');
+  const getMoreForm = document.querySelector('#inquiry-more');
+
+  // toggle extra form info from checkbox
+  getMoreCheckbox.addEventListener("change", () => {
+    if (getMoreCheckbox.checked) {
+      getMoreForm.classList.add('visible');
+      getMoreForm.classList.remove('not-visible');
+    } else {
+      getMoreForm.classList.remove('visible');
+      getMoreForm.classList.add('not-visible');
+    }
+  });
+
   const form = cols[1].querySelector('form');
   form.addEventListener('submit', e => {
     e.preventDefault()
