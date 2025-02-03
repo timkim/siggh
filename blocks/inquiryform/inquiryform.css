@@ -26,11 +26,11 @@
 }
 
 .inquiryform .visible {
-  visibility: visible;
+  display: block;
 }
 
 .inquiryform .not-visible {
-  visibility: hidden;
+  display: none;
 }
 .inquiryform > div > div:nth-child(2) > form > div {
   padding-bottom: 10px;

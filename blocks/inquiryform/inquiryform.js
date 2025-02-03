@@ -137,29 +137,36 @@ export default async function decorate(block) {
   cols[0].append(contactsGroup);
 
   const links = [...cols[1].querySelectorAll('a')].map((a) => a.href);
+
+  const submitSuccessUrl = links.find((link) => link.startsWith('https://siggh.us'));
   const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
 
-  cols[1].innerHTML = inquiryForm(submitLink, inquiryformTitle.innerHTML, inquiryDescription.innerHTML).innerHTML;
+  if(submitSuccessUrl && submitLink) {
+    cols[1].innerHTML = inquiryForm(submitLink, inquiryformTitle.innerHTML, inquiryDescription.innerHTML).innerHTML;
   
-  const getMoreCheckbox = document.querySelector('#inquiryGetMore');
-  const getMoreForm = document.querySelector('#inquiry-more');
-
-  // toggle extra form info from checkbox
-  getMoreCheckbox.addEventListener("change", () => {
-    if (getMoreCheckbox.checked) {
-      getMoreForm.classList.add('visible');
-      getMoreForm.classList.remove('not-visible');
-    } else {
-      getMoreForm.classList.remove('visible');
-      getMoreForm.classList.add('not-visible');
-    }
-  });
-
-  const form = cols[1].querySelector('form');
-  form.addEventListener('submit', e => {
-    e.preventDefault()
-    fetch(submitLink, { method: 'POST', body: new FormData(form)})
-      .then(response => console.log('Success!', response))
-      .catch(error => console.error('Error!', error.message))
-  })
+    const getMoreCheckbox = document.querySelector('#inquiryGetMore');
+    const getMoreForm = document.querySelector('#inquiry-more');
+  
+    // toggle extra form info from checkbox
+    getMoreCheckbox.addEventListener("change", () => {
+      if (getMoreCheckbox.checked) {
+        getMoreForm.classList.add('visible');
+        getMoreForm.classList.remove('not-visible');
+      } else {
+        getMoreForm.classList.remove('visible');
+        getMoreForm.classList.add('not-visible');
+      }
+    });
+  
+    const form = cols[1].querySelector('form');
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      fetch(submitLink, { method: 'POST', body: new FormData(form)})
+        .then( (response) => {
+          window.location.href = submitSuccessUrl;
+        })
+        .catch(error => console.error('Error!', error.message))
+    })
+  }
+  
 }
