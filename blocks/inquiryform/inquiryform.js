@@ -97,39 +97,51 @@ function inquiryForm(scriptURL) {
   const div = createTag('div', { class: 'inquiryForm'});
   div.innerHTML = `
   <form name="inquiry">
-    <label for="inquiryName">Name</label>
-    <input id="inquiryName" name="name" type="text" required>
+    <div>
+      <label for="inquiryName">Name</label>
+      <input id="inquiryName" name="name" type="text" required>
 
-    <label for="inquiryEmail">Email address</label>
-    <input id="inquiryEmail" name="email" type="email" required>
-
-    <label for="inquiryGetMore">Get More Pricing Info</label>
-    <input id="inquiryGetMore" name="getMorePricing" type="checkbox" >
-
-    <label for="inquiryIndustry">Industry</label>
-    <input id="inquiryIndustry" name="industry" type="text" > 
-
-    <label for="inquiryCoreMaterial">Core Material</label>
-    <input id="inquiryCoreMaterial" name="coreMaterial" type="text" >
-
-    <label for="inquiryProductDescription">Product Description</label>
-    <input id="inquiryProductDescription" name="productDescription" type="text" >    
-
-    <label for="inquirySpecs">Do you have completed Drawings/Specs?</label>
-    <div id="inquirySpecs">
-        <input id="inquirySpecsYes" name="inquirySpecsYes" type="radio" value="yes" > 
-        <label for="inquirySpecsYes">Yes</label>
-
-        <input id="inquirySpecsNo" name="inquirySpecsNo" type="radio" value="no" > 
-        <label for="inquirySpecsNo">No</label>
+      <label for="inquiryEmail">Email address</label>
+      <input id="inquiryEmail" name="email" type="email" required>
     </div>
 
-    <label for="inquiryEstimatedAnnual">Estimated Annual Quantity</label>
-    <input id="inquiryEstimatedAnnual" name="estimatedAnnlyal" type="text" >
-    
+    <div>
+      <label for="inquiryGetMore">Get More Pricing Info</label>
+      <input id="inquiryGetMore" name="getMorePricing" type="checkbox" >
+    </div>
+
+    <div>
+      <label for="inquiryIndustry">Industry</label>
+      <input id="inquiryIndustry" name="industry" type="text" > 
+
+      <label for="inquiryCoreMaterial">Core Material</label>
+      <input id="inquiryCoreMaterial" name="coreMaterial" type="text" >
+    </div>
+
+    <div>
+      <label for="inquiryProductDescription">Product Description</label>
+      <input id="inquiryProductDescription" name="productDescription" type="text" >    
+    </div>
+
+    <div>
+      <label for="inquirySpecs">Do you have completed Drawings/Specs?</label>
+      <div id="inquirySpecs">
+          <input id="inquirySpecsYes" name="inquirySpecsYes" type="radio" value="yes" > 
+          <label for="inquirySpecsYes">Yes</label>
+
+          <input id="inquirySpecsNo" name="inquirySpecsNo" type="radio" value="no" > 
+          <label for="inquirySpecsNo">No</label>
+      </div>
+    </div>
+
+    <div>
+      <label for="inquiryEstimatedAnnual">Estimated Annual Quantity</label>
+      <input id="inquiryEstimatedAnnual" name="estimatedAnnlyal" type="text" >
+    </div>
     <button type="submit">Let's Chat</button>
   </form>
   `
+  return div;
 }
 export default async function decorate(block) {
   // const links = [...block.querySelectorAll('a')].map((a) => a.href);
@@ -155,10 +167,38 @@ export default async function decorate(block) {
   //   }
   // });
 
-  const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
-  block.innerHTML = inquiryForm(submitLink); 
+  const cols = [...block.firstElementChild.children];
+  block.classList.add(`inquiryform-${cols.length}-cols`);
 
+  // setup image columns
+  [...block.children].forEach((row) => {
+    [...row.children].forEach((col) => {
+      const pic = col.querySelector('picture');
+      if (pic) {
+        const picWrapper = pic.closest('div');
+        if (picWrapper && picWrapper.children.length === 1) {
+          // picture is only content in column
+          picWrapper.classList.add('inquiryform-img-col');
+        }
+      }
+    });
+  });
+
+  console.log(cols)
+  console.log(cols[1].innerHTML)
+
+  const inquiryformTitle = cols[1].querySelector('h1');
+  const inquiryDescription = cols[1].querySelector('p');
+
+  cols[1].innerHTML = inquiryForm(1234).innerHTML;
   
+  // const links = [...block.querySelectorAll('a')].map((a) => a.href);
+  // const submitLink = links.find((link) => link.startsWith('https://script.google.com'));
+
+  // block.querySelector('div');
+  // block.append(inquiryForm(submitLink));
+
+
   block.addEventListener('submit', e => {
     e.preventDefault()
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})

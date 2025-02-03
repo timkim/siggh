@@ -1,0 +1,43 @@
+.inquiryform > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.inquiryform img {
+  width: 100%;
+}
+
+.inquiryform > div > div {
+  order: 1;
+}
+
+.inquiryform > div > .inquiryform-img-col {
+  order: 0;
+}
+
+.inquiryform > div > .inquiryform-img-col img {
+  display: block;
+}
+
+.inquiryform p {
+  margin: 0 auto;
+}
+
+@media (width >= 900px) {
+  .inquiryform > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
+  }
+
+  .inquiryform > div > div {
+    flex: 1;
+    order: unset;
+  }
+
+  .inquiryform-img-col p {
+    font-size: 36px;
+    line-height: 42.19px;
+    width: 432px;
+  }
+}
