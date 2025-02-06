@@ -38,7 +38,7 @@
   --heading-font-size-xs: 22px;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 78px;
 }
 
 /* fallback fonts */
@@ -234,7 +234,7 @@ main > .section {
 }
 
 main > .section > div {
-  max-width: 1440px;
+  max-width: 1200px;
   margin: auto;
   padding: 0 24px;
 }

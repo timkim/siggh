@@ -32,8 +32,8 @@ function inquiryForm(scriptUrl, heading, description) {
     </div>
 
     <div>
-      <label for="inquiryGetMore">Get More Pricing Info</label>
       <input id="inquiryGetMore" name="getMorePricing" type="checkbox" >
+      <label id="inquiryGetMoreLabel" for="inquiryGetMore">Get More Pricing Info</label>
     </div>
 
     <div id="inquiry-more" class="not-visible">
